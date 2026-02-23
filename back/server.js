@@ -1,11 +1,12 @@
 import app from "./app.js";
 import 'dotenv/config';
+import {testConnection, sql} from "./dbConnection.js"
 
 const port = process.env.port;
 
 (async () => {
     try {
-        // await testConnection();
+        await testConnection();
 
         app.listen(port, () => {
             console.log(`Server is ready and using ${port} port`);
