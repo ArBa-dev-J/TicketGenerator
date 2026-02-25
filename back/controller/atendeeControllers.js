@@ -69,12 +69,14 @@ export const getByIdC = async (req, res) => {
     const { id } = req.params;
     const atendee = await getByIdM({ id });
 
-    if (atendee.length === 0) {
+    if (atendee === undefined) {
       return res.status(404).json({
         status: "fail",
         message: "No attendees found",
       });
     }
+
+    atendee.password = undefined;
 
     res.status(200).json({
       status: "success",
@@ -120,7 +122,7 @@ export const login = async (req, res) => {
 };
 
 //autorizacijos middleware, routes apsaugai nuo neregistruotų vartotojų
-export const protect = async (req, res) => {
+export const protect = async (req, res, next) => {
   try {
     let token = req.cookies?.jwt;
 
@@ -129,7 +131,8 @@ export const protect = async (req, res) => {
     }
 
     const decodedAttendee = jwt.verify(token, process.env.JWT_SECRET);
-    const currentAttendee = await getUserById(decodedAttendee.id);
+
+    const currentAttendee = await getByIdM(decodedAttendee);
 
     if (!currentAttendee) {
       throw new Error(
@@ -138,11 +141,9 @@ export const protect = async (req, res) => {
       );
     }
 
-    req.attendee = currentAttendee;
+    req.user = currentAttendee;
 
-    res.status(200).json({
-      status: "success",
-    });
+    next();
   } catch (err) {
     res.status(500).json({
       status: "fail",
@@ -152,21 +153,21 @@ export const protect = async (req, res) => {
 };
 
 //patikrins kokią rolę turi prisijungęs vartotojas ir pagal rolę suteiks teises į informaciją
-export const allowAccessTo = (...attendee) => {
+export const allowAccessTo = (...roles) => {
   return (req, res, next) => {
     try {
-      console.log(attendee);
-      console.log(req.user);
+      // console.log(req.user.roles);
+      // console.log(roles);
+      // console.log(req.user);
+      // console.log(!roles.includes(req.user.role));
 
-      if (!attendee.includes(req.user.role)) {
-        throw new Error(
-          "You do not have permissions to perform this action",
-          403,
-        );
+      if (!roles) {
+        res.status(403).json({
+          status: "Fail",
+          message: "You do not have the permission"
+        })
       }
-      res.status(200).json({
-        status: "ok",
-      });
+      next();
     } catch (err) {
       res.status(500).json({
         status: "fail",

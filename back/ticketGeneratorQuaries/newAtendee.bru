@@ -5,11 +5,22 @@ meta {
 }
 
 post {
-  url: http://localhost:3000/api/v1/atendees
-  body: none
+  url: http://localhost:3000/api/v1/atendee/signup
+  body: json
   auth: inherit
+}
+
+body:json {
+  {
+    "name": "Anakin Skywalker",
+    "emailAddress" : "anakin@gmail.com",
+    "password": "password123",
+    "githubUsername" : "anakin",
+    "avatar": "https://images.stockcake.com/public/5/5/a/55ad8d4b-0de0-4a47-b0a2-c5f83d8dcaba_large/armored-warrior-stands-stockcake.jpg"
+  }
 }
 
 settings {
   encodeUrl: true
+  timeout: 0
 }

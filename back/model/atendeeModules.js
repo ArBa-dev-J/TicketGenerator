@@ -8,13 +8,13 @@ export const postNewDataM = async (newData) => {
 
   const dataList = await sql`
     INSERT INTO attendees ${sql(
-      data,
-      "name",
-      "emailAddress",
-      "password",
-      "githubUsername",
-      "avatar",
-    )}
+    data,
+    "name",
+    "emailAddress",
+    "password",
+    "githubUsername",
+    "avatar",
+  )}
     returning *
     `;
   return dataList[0];
@@ -33,9 +33,11 @@ export const getUserByEmailM = async (emailAddress) => {
 // get by id for ticker generation
 
 export const getByIdM = async ({ id }) => {
-  return await sql`
+  const attende = await sql`
 SELECT * FROM attendees
 WHERE id = ${id}
 `;
+
+  return attende[0];
 };
 
