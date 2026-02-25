@@ -24,7 +24,7 @@ export const postNewDataM = async (newData) => {
 
 export const getUserByEmailM = async (emailAddress) => {
   const users = await sql`
-    select * from users where email=${emailAddress}
+    select * from attendees where "emailAddress" = ${emailAddress}
     `;
 
   return users[0];

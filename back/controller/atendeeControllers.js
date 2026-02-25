@@ -95,20 +95,20 @@ export const login = async (req, res) => {
 
     const attendee = await getUserByEmailM(emailAddress);
     if (!attendee)
-      throw new AppError("Invalid attendee's email or password", 401);
+      throw new Error("Invalid attendee's email or password", 401);
 
     const passwordCorrect = await argon2.verify(attendee.password, password);
 
     if (!passwordCorrect)
-      throw new AppError("Invalid attendee's email or password", 401);
+      throw new Error("Invalid attendee's email or password", 401);
 
     const token = signToken(attendee.id);
     sendTokenCookie(token, res);
 
-    user.password = undefined;
+    attendee.password = undefined;
 
     res.status(200).json({
-      status: "logged id",
+      status: "logged in",
     });
   } catch (err) {
     res.status(500).json({
@@ -158,7 +158,7 @@ export const allowAccessTo = (...attendee) => {
       console.log(req.user);
 
       if (!attendee.includes(req.user.role)) {
-        throw new AppError(
+        throw new Error(
           "You do not have permissions to perform this action",
           403,
         );
