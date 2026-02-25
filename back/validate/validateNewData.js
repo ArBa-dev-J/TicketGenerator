@@ -21,7 +21,7 @@ const validateNewData = [
       return true;
     }),
 
-  body("emailAdress")
+  body("emailAddress")
     .isString()
     .withMessage("Must be a string")
     .isEmail()

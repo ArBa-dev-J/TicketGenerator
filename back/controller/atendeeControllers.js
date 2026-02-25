@@ -8,7 +8,7 @@ export const postNewDataC = async (req, res) => {
 
     if (
       !newData.name ||
-      !newData.emailAdress ||
+      !newData.emailAddress ||
       !newData.githubUsername ||
       !newData.avatar
     ) {
@@ -42,7 +42,7 @@ export const getByIdC = async (req, res) => {
     if (atendee.length === 0) {
       return res.status(404).json({
         status: "fail",
-        message: "No atendees found",
+        message: "No attendees found",
       });
     }
 

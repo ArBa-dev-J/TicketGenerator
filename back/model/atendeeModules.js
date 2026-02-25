@@ -3,14 +3,14 @@ import { sql } from "../dbConnection.js";
 // post new data
 
 export const postNewDataM = async (newData) => {
-  const { name, emailAdress, githubUsername, avatar } = newData;
-  const data = { name, emailAdress, githubUsername, avatar };
+  const { name, emailAddress, githubUsername, avatar } = newData;
+  const data = { name, emailAddress, githubUsername, avatar };
 
   const dataList = await sql`
-    INSERT INTO atendees ${sql(
+    INSERT INTO attendees ${sql(
       data,
       "name",
-      "emailAdress",
+      "emailAddress",
       "githubUsername",
       "avatar",
     )}
@@ -23,7 +23,7 @@ export const postNewDataM = async (newData) => {
 
 export const getByIdM = async ({ id }) => {
   return await sql`
-SELECT * FROM atendees
+SELECT * FROM attendees
 WHERE id = ${id}
 `;
 };
