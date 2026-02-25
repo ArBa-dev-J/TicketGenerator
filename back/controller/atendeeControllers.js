@@ -1,4 +1,29 @@
-import { postNewDataM, getByIdM } from "../model/atendeeModules.js";
+import argon2 from "argon2";
+import jwt from "jsonwebtoken";
+import { postNewDataM, getByIdM, getUserByEmailM } from "../model/atendeeModules.js";
+
+// creates and returns jwt token
+
+const signToken = (id) => {
+  const token = jwt.sign({ id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES_IN,
+  });
+
+  return token;
+};
+
+// writes jwt cookie to front
+
+const sendTokenCookie = (token, res) => {
+  const cookieOptions = {
+    expires: new Date(
+      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000,
+    ),
+    httpOnly: true,
+  };
+
+  res.cookie("jwt", token, cookieOptions);
+};
 
 // uplaod new data to sql
 
@@ -10,7 +35,8 @@ export const postNewDataC = async (req, res) => {
       !newData.name ||
       !newData.emailAddress ||
       !newData.githubUsername ||
-      !newData.avatar
+      !newData.avatar ||
+      !newData.password
     ) {
       res.status(400).json({
         status: "fail",
@@ -18,6 +44,10 @@ export const postNewDataC = async (req, res) => {
       });
       return;
     }
+
+    const hash = await argon2.hash(newData.password);
+
+    newData.password = hash;
 
     const topic = await postNewDataM(newData);
     res.status(201).json({
@@ -57,3 +87,114 @@ export const getByIdC = async (req, res) => {
     });
   }
 };
+
+//vartotojo prisijungimo duomenų patikrinimas ir jwt tokeno įrašymas
+export const login = async (req, res) => {
+  try {
+    const { emailAddress, password } = req.body;
+
+    const attendee = await getUserByEmailM(emailAddress);
+    if (!attendee)
+      throw new AppError("Invalid attendee's email or password", 401);
+
+    const passwordCorrect = await argon2.verify(attendee.password, password);
+
+    if (!passwordCorrect)
+      throw new AppError("Invalid attendee's email or password", 401);
+
+    const token = signToken(attendee.id);
+    sendTokenCookie(token, res);
+
+    user.password = undefined;
+
+    res.status(200).json({
+      status: "logged id",
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: "fail",
+      message: err.message,
+    });
+  }
+};
+
+//autorizacijos middleware, routes apsaugai nuo neregistruotų vartotojų
+export const protect = async (req, res) => {
+  try {
+    let token = req.cookies?.jwt;
+
+    if (!token) {
+      throw new Error("You are not logged in! Please log in to get access");
+    }
+
+    const decodedAttendee = jwt.verify(token, process.env.JWT_SECRET);
+    const currentAttendee = await getUserById(decodedAttendee.id);
+
+    if (!currentAttendee) {
+      throw new Error(
+        "The user belonging to this token does not longer exist",
+        401,
+      );
+    }
+
+    req.attendee = currentAttendee;
+
+    res.status(200).json({
+      status: "success",
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: "fail",
+      message: err.message,
+    });
+  }
+};
+
+//patikrins kokią rolę turi prisijungęs vartotojas ir pagal rolę suteiks teises į informaciją
+export const allowAccessTo = (...attendee) => {
+  return (req, res, next) => {
+    try {
+      console.log(attendee);
+      console.log(req.user);
+
+      if (!attendee.includes(req.user.role)) {
+        throw new AppError(
+          "You do not have permissions to perform this action",
+          403,
+        );
+      }
+      res.status(200).json({
+        status: "ok",
+      });
+    } catch (err) {
+      res.status(500).json({
+        status: "fail",
+        message: err.message,
+      });
+    }
+  };
+};
+
+//logout user
+export const logout = (req, res) => {
+  return res.clearCookie("jwt").status(200).json({
+    status: "success",
+    message: "Your are now logged out",
+  });
+};
+
+// export const getAuthenticatedUser = (req, res, next) => {
+//   try {
+//     req.user.password = undefined;
+
+//     res.status(200).json({
+//       status: "success",
+//       data: req.user,
+//     });
+//   } catch (err) {
+//     res.status(500).json({
+//       status: "fail",
+//       message: err.message,
+//     });
+//   }
+// };
