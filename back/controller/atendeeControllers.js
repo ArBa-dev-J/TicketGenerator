@@ -49,10 +49,10 @@ export const postNewDataC = async (req, res) => {
 
     newData.password = hash;
 
-    const topic = await postNewDataM(newData);
+    const newAtendee = await postNewDataM(newData);
     res.status(201).json({
       status: "success",
-      data: topic,
+      data: newAtendee,
     });
   } catch (error) {
     res.status(500).json({
@@ -109,6 +109,7 @@ export const login = async (req, res) => {
 
     res.status(200).json({
       status: "logged in",
+      data: attendee
     });
   } catch (err) {
     res.status(500).json({
