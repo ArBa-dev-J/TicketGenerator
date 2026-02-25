@@ -12,9 +12,10 @@ import validateNewData from "../validate/validateNewData.js";
 
 const atendeeRoutes = express.Router();
 
-atendeeRoutes.route("/signup").post(validateNewData, validate, postNewDataC);
-atendeeRoutes.route("/login").get(login)
-atendeeRoutes.route("/:id").get(protect, allowAccessTo("user"), getByIdC);
 atendeeRoutes.route("/logout").get(protect, logout)
+atendeeRoutes.route("/signup").post(validateNewData, validate, postNewDataC);
+atendeeRoutes.route("/login").post(login)
+atendeeRoutes.route("/:id").get(protect, allowAccessTo("user"), getByIdC);
+
 
 export default atendeeRoutes;
