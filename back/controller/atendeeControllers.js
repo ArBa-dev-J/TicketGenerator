@@ -195,18 +195,18 @@ export const logout = (req, res) => {
   });
 };
 
-// export const getAuthenticatedUser = (req, res, next) => {
-//   try {
-//     req.user.password = undefined;
+export const getAuthenticatedUser = (req, res, next) => {
+  try {
+    req.user.password = undefined;
 
-//     res.status(200).json({
-//       status: "success",
-//       data: req.user,
-//     });
-//   } catch (err) {
-//     res.status(500).json({
-//       status: "fail",
-//       message: err.message,
-//     });
-//   }
-// };
+    res.status(200).json({
+      status: "success",
+      data: req.user,
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: "fail",
+      message: err.message,
+    });
+  }
+};
