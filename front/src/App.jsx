@@ -6,7 +6,8 @@ function App() {
     <>
       <Routes>
         <Route path="/" element={<Home />} />
-        {/* <Route path="/ticket" element={<Ticket />} /> */}
+        {/* <Route path="/login" element={<Login />} /> */}
+        {/* <Route path="/:id/ticket" element={<Ticket />} /> */}
       </Routes>
     </>
   );
