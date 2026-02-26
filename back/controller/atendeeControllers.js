@@ -1,6 +1,10 @@
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
-import { postNewDataM, getByIdM, getUserByEmailM } from "../model/atendeeModules.js";
+import {
+  postNewDataM,
+  getByIdM,
+  getUserByEmailM,
+} from "../model/atendeeModules.js";
 
 // creates and returns jwt token
 
@@ -97,12 +101,18 @@ export const login = async (req, res) => {
 
     const attendee = await getUserByEmailM(emailAddress);
     if (!attendee)
-      throw new Error("Invalid attendee's email or password", 401);
+      return res.status(401).json({
+        status: "fail",
+        message: "Wrong email or pwassword",
+      });
 
     const passwordCorrect = await argon2.verify(attendee.password, password);
 
     if (!passwordCorrect)
-      throw new Error("Invalid attendee's email or password", 401);
+      return res.status(401).json({
+        status: "fail",
+        message: "Wrong email or pwassword",
+      });
 
     const token = signToken(attendee.id);
     sendTokenCookie(token, res);
@@ -111,7 +121,7 @@ export const login = async (req, res) => {
 
     res.status(200).json({
       status: "logged in",
-      data: attendee
+      data: attendee,
     });
   } catch (err) {
     res.status(500).json({
@@ -164,8 +174,8 @@ export const allowAccessTo = (...roles) => {
       if (!roles) {
         res.status(403).json({
           status: "Fail",
-          message: "You do not have the permission"
-        })
+          message: "You do not have the permission",
+        });
       }
       next();
     } catch (err) {
