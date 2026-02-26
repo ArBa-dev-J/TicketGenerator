@@ -1,7 +1,9 @@
+import { Link } from "react-router";
+
 function MainTitle() {
 return (
     <>
-     <p>Coding Conf</p>
+     <Link to="/"><p>Coding Conf</p></Link>
     </>
 );
 }

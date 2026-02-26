@@ -1,6 +1,7 @@
 import MainTitle from "../MainTitle";
 import HomeHeader from "./HomeHeader";
 import HomeForm from "./HomeForm";
+import HomeLogin from "./HomeLogin";
 
 function Home() {
   return (
@@ -10,7 +11,10 @@ function Home() {
         <MainTitle />
         <HomeHeader />
         </header>
+        <section>
         <HomeForm />
+        <HomeLogin/>
+        </section>
       </main>
     </>
   );
