@@ -1,0 +1,23 @@
+meta {
+  name: login 
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:3000/api/v1/atendee/login
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "emailAddress" : "anakin@gmail.com",
+     "password": "password123"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

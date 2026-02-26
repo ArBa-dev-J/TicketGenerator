@@ -21,13 +21,15 @@ const validateNewData = [
       return true;
     }),
 
-  body("emailAdress")
+  body("emailAddress")
     .isString()
     .withMessage("Must be a string")
     .isEmail()
     .withMessage("Must be an email")
     .isLength({ min: 5 })
     .withMessage("Email must be atleast 5 chars long"),
+
+  body("password").isString().withMessage("Must be a string"),
 
   body("githubUsername")
     .isString()

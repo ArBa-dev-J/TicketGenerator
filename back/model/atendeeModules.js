@@ -3,27 +3,41 @@ import { sql } from "../dbConnection.js";
 // post new data
 
 export const postNewDataM = async (newData) => {
-  const { name, emailAdress, githubUsername, avatar } = newData;
-  const data = { name, emailAdress, githubUsername, avatar };
+  const { name, emailAddress, password, githubUsername, avatar } = newData;
+  const data = { name, emailAddress, password, githubUsername, avatar };
 
   const dataList = await sql`
-    INSERT INTO atendees ${sql(
-      data,
-      "name",
-      "emailAdress",
-      "githubUsername",
-      "avatar",
-    )}
+    INSERT INTO attendees ${sql(
+    data,
+    "name",
+    "emailAddress",
+    "password",
+    "githubUsername",
+    "avatar",
+  )}
     returning *
     `;
   return dataList[0];
 };
 
-// get by id
+// get user by email
+
+export const getUserByEmailM = async (emailAddress) => {
+  const users = await sql`
+    select * from attendees where "emailAddress" = ${emailAddress}
+    `;
+
+  return users[0];
+};
+
+// get by id for ticker generation
 
 export const getByIdM = async ({ id }) => {
-  return await sql`
-SELECT * FROM atendees
+  const attende = await sql`
+SELECT * FROM attendees
 WHERE id = ${id}
 `;
+
+  return attende[0];
 };
+
