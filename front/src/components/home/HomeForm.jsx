@@ -29,37 +29,47 @@ function HomeForm() {
         <label className="block">Avatar</label>
         <input
           type="text"
-          {...register("avatar", { required: true })}
+          {...register("avatar", { required: true, pattern: "^https:\/\/[a-zA-Z0-9.-]+\/(v\d+\/)?hooks\/forms\/[a-zA-Z0-9_-]+$" })}
           className="border"
           placeholder="Put img url here"
         />
-
+        {errors.avatar && (
+          <p>Must be an url</p>
+        )}
         <label className="block">Full name</label>
-        <input type="text" className="border" />
-
+        <input type="text" {...register("name", { required: true, pattern: /^[A-Za-z]+(?:\s+[A-Za-z]+)$/ })} className="border" />
+        {errors.name && (
+          <p>Must contain first name and surname</p>
+        )}
         <label className="block">Email Address</label>
         <input
           type="email"
-          {...register("emailAddress", { required: true })}
+          {...register("emailAddress", { required: true, pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/ })}
           className="border"
           placeholder="example@email.com"
         />
-
+        {errors.emailAddress && (
+          <p>Must be an email</p>
+        )}
         <label className="block">Password</label>
         <input
           type="password"
           {...register("password", { required: true })}
           className="border"
         />
-
+        {errors.password && (
+          <p>Must write a password</p>
+        )}
         <label className="block">Github username</label>
         <input
           type="text"
-          {...register("githubUsername", { required: true })}
+          {...register("githubUsername", { required: true, pattern: /^@[A-Za-z]+/  })}
           className="border"
           placeholder="@yourusername"
         />
-
+        {errors.githubUsername && (
+          <p>Must write @ before name</p>
+        )}
         <input type="submit" className="border" value="Sign up" />
       </form>
     </>
