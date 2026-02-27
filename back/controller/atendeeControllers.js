@@ -1,5 +1,6 @@
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
+import voucher_codes from "voucher-code-generator"
 import {
   postNewDataM,
   getByIdM,
@@ -33,14 +34,24 @@ const sendTokenCookie = (token, res) => {
 
 export const postNewDataC = async (req, res) => {
   try {
+
+    // ticket code generator
+    const ticketCode = voucher_codes.generate({
+      length: 8,
+      count: 1
+    })[0];
+
     const newData = req.body;
+    // attach ticket code to data
+    newData.ticketCode = ticketCode;
 
     if (
       !newData.name ||
       !newData.emailAddress ||
       !newData.githubUsername ||
       !newData.avatar ||
-      !newData.password
+      !newData.password ||
+      !newData.ticketCode
     ) {
       res.status(400).json({
         status: "fail",
@@ -52,8 +63,10 @@ export const postNewDataC = async (req, res) => {
     const hash = await argon2.hash(newData.password);
 
     newData.password = hash;
-
+    
     const newAtendee = await postNewDataM(newData);
+
+    newAtendee.password = undefined;
     res.status(201).json({
       status: "success",
       data: newAtendee,
