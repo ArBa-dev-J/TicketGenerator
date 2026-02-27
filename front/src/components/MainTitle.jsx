@@ -3,7 +3,7 @@ import { Link } from "react-router";
 function MainTitle() {
 return (
     <>
-     <Link to="/"><p>Coding Conf</p></Link>
+     <Link to="/"><p className="text-center">Coding Conf</p></Link>
     </>
 );
 }

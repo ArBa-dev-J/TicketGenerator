@@ -23,7 +23,7 @@ function HomeForm() {
         body: JSON.stringify(data),
       };
       const response = await fetch(
-        "http://localhost:3000/api/v1/atendee/signup",
+        "http://localhost:3000/api/v1/atendee",
         requestOptions,
       );
       if (response.ok) {
