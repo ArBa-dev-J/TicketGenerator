@@ -16,8 +16,24 @@ function HomeForm() {
   });
 
   const onSubmit = async (data) => {
-    console.log(data);
-    reset();
+    try {
+      const requestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      };
+      const response = await fetch(
+        "http://localhost:3000/api/v1/atendee/signup",
+        requestOptions,
+      );
+      if (response.ok) {
+        reset();
+      } else {
+        throw new Error("Data was not sent");
+      }
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   return (
