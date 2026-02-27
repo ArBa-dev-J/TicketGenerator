@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS attendees (
     name VARCHAR(255) NOT NULL UNIQUE,
     "emailAddress" VARCHAR(255) NOT NULL UNIQUE,
     "password" VARCHAR(255) NOT NULL UNIQUE,
-    "ticketCode" VARCHAR(2550) NOT NULL, UNIQUE,
+    "ticketCode" VARCHAR(2550) NOT NULL UNIQUE,
     "githubUsername" VARCHAR(255) NOT NULL UNIQUE,
     avatar VARCHAR(500) NOT NULL
 );

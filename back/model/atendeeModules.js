@@ -3,14 +3,15 @@ import { sql } from "../dbConnection.js";
 // post new data
 
 export const postNewDataM = async (newData) => {
-  const { name, emailAddress, password, githubUsername, avatar } = newData;
-  const data = { name, emailAddress, password, githubUsername, avatar };
+  const { name, emailAddress, password, githubUsername, avatar, ticketCode } = newData;
+  const data = { name, emailAddress, password, githubUsername, avatar, ticketCode };
 
   const dataList = await sql`
     INSERT INTO attendees ${sql(
     data,
     "name",
     "emailAddress",
+    "ticketCode",
     "password",
     "githubUsername",
     "avatar",
