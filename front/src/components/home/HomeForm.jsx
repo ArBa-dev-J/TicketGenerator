@@ -24,7 +24,7 @@ function HomeForm() {
         body: JSON.stringify(data),
       };
       const response = await fetch(
-        "http://localhost:3000/api/v1/atendee",
+        "http://localhost:3000/api/v1/atendee/signup",
         requestOptions,
       );
       if (response.ok) {
@@ -71,11 +71,11 @@ function HomeForm() {
         <label className="block">Password</label>
         <input
           type="password"
-          {...register("password", { required: true })}
+          {...register("password", { required: true, min: 6 })}
           className="border"
         />
         {errors.password && (
-          <p>Must write a password</p>
+          <p>Must write a password and must be minimum 6 chars long</p>
         )}
         <label className="block">Github username</label>
         <input

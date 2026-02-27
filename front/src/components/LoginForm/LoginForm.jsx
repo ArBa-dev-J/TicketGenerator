@@ -10,8 +10,24 @@ function LoginForm() {
     } = useForm();
 
     const onSubmit = async (data) => {
-        console.log(data);
+          try {
+      const requestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      };
+      const response = await fetch(
+        "http://localhost:3000/api/v1/atendee/login",
+        requestOptions,
+      );
+      if (response.ok) {
         reset();
+      } else {
+        throw new Error("error");
+      }
+    } catch (error) {
+      alert(error.message);
+    }
     }
 
     return (
