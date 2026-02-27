@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-
+import { Link } from "react-router";
 
 function LoginForm() {
 
@@ -59,7 +59,7 @@ function LoginForm() {
                         <p>Must write a password and must be atleast 6 chars long</p>
                     )}
 
-                    <input type="submit" className="border" value="Login" />
+                   <Link to="/ticket"> <input type="submit" className="border" value="Login" /></Link>
                 </form>
             </section>
         </>
