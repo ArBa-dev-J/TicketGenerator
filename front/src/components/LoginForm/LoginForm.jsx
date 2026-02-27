@@ -2,6 +2,8 @@ import { useForm } from "react-hook-form";
 
 
 function LoginForm() {
+
+
     const {
         register,
         handleSubmit,
@@ -10,24 +12,26 @@ function LoginForm() {
     } = useForm();
 
     const onSubmit = async (data) => {
-          try {
-      const requestOptions = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      };
-      const response = await fetch(
-        "http://localhost:3000/api/v1/atendee/login",
-        requestOptions,
-      );
-      if (response.ok) {
-        reset();
-      } else {
-        throw new Error("error");
-      }
-    } catch (error) {
-      alert(error.message);
-    }
+        try {
+            const requestOptions = {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data),
+            };
+            const response = await fetch(
+                "http://localhost:3000/api/v1/atendee/login",
+                requestOptions,
+            );
+            if (response.ok) {
+                reset();
+            } else  // Check if response is NOT 2xx
+                if (!response.ok) {
+                    const errorData = await response.json(); // backend error message
+                    throw new Error(errorData.message || "Something went wrong");
+                }
+        } catch (error) {
+            alert(error.message);
+        }
     }
 
     return (
@@ -48,11 +52,11 @@ function LoginForm() {
                     <label className="block">Password</label>
                     <input
                         type="password"
-                        {...register("password", { required: true })}
+                        {...register("password", { required: true, min: 6 })}
                         className="border"
                     />
                     {errors.password && (
-                        <p>Must write a password</p>
+                        <p>Must write a password and must be atleast 6 chars long</p>
                     )}
 
                     <input type="submit" className="border" value="Login" />
