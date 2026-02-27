@@ -1,10 +1,12 @@
+import { Link } from "react-router";
+
 function HomeLogin() {
   return (
     <>
     <div className="text-center">
-      <button type="button" className="border">
+     <Link to="/login"> <button type="button" className="border">
         Login to generate a ticket
-      </button>
+      </button></Link>
       </div>
     </>
   );
